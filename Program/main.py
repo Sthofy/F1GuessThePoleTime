@@ -12,7 +12,7 @@ from MainPage import MainWidget
 
 class Main(MDApp):
     def __init__(self, **kwargs):
-        self.title = "My Material Application"
+        self.title = "F1 Guess The Pole Time"
         super().__init__(**kwargs)
 
     def build(self):
