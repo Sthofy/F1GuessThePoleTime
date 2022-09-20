@@ -1,22 +1,31 @@
-from kivy.app import App
+import os
+
+cwd = os.getcwd()
+os.environ['KIVY_HOME'] = cwd + '/conf'
+
+from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
+from kivy.lang import Builder
 from LoginPage import LoginWidget
+from MainPage import MainWidget
 
 
-class WindowManager(ScreenManager):
-    pass
+class Main(MDApp):
+    def __init__(self, **kwargs):
+        self.title = "My Material Application"
+        super().__init__(**kwargs)
 
-
-class Main(App):
     def build(self):
-        self.sm = WindowManager()
+        self.root = Builder.load_file('KV-files/root.kv')
 
-        screens = [LoginWidget(name="reviews")]
+        screens = [LoginWidget(name="login"), MainWidget(name='main')]
+        sm = ScreenManager()
+
         for screen in screens:
-            self.sm.add_widget(screen)
+            sm.add_widget(screen)
+        sm.current = "login"
+        return sm
 
-        self.sm.current = "reviews"
-        return self.sm
 
-
-Main().run()
+if __name__ == '__main__':
+    Main().run()
