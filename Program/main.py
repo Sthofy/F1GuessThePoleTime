@@ -9,8 +9,14 @@ from kivy.lang import Builder
 from LoginPage import LoginWidget
 from MainPage import MainWidget
 
+sm = ScreenManager()
+
 
 class Main(MDApp):
+
+    def change_screen(self, screen):
+        sm.current = screen
+
     def __init__(self, **kwargs):
         self.title = "F1 Guess The Pole Time"
         super().__init__(**kwargs)
@@ -19,7 +25,6 @@ class Main(MDApp):
         self.root = Builder.load_file('KV-files/root.kv')
 
         screens = [LoginWidget(name="login"), MainWidget(name='main')]
-        sm = ScreenManager()
 
         for screen in screens:
             sm.add_widget(screen)

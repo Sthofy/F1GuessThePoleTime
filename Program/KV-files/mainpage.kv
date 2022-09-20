@@ -1,26 +1,56 @@
 <MainWidget>:
-    BoxLayout:
-        size_hint_x: .3
-        orientation:'vertical'
-        canvas:
-            Color:
-                rgb:0.11,0.24,0.30
-            Rectangle:
-                size:self.size
-                pos:self.pos
-        Button:
-            text:'Log out'
-            size: 100,50
-            size_hint: None, None
-            on_release:
-                app.root.current = 'login'
-                root.manager.transition.direction = 'right'
-    BoxLayout:
-        size_hint_x: .7
-#    BoxLayout:
-#        orientation:'vertical'
-#        MDToolbar:
-#            title:'Demo'
-#            left_action_items: [['menu',lambda x:app.navigation_draw()]]
-#            elevation:10
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation:'vertical'
+                    MDTopAppBar:
+                        title:'Demo'
+                        left_action_items: [['menu',lambda x:nav_drawer.set_state('open')]]
+                        right_action_items:[['logout-variant',lambda x: app.change_screen('login'),"Log Out"]]
+                        elevation:5
+                    Widget:
+        MDNavigationDrawer:
+            id:nav_drawer
+            ContentNavigationDrawer:
+                orientation: 'vertical'
+                padding: "8dp"
+                spacing: "8dp"
+                Image:
+                    id: avatar
+                    size_hint: (1,1)
+                    source: "mine.jpg"
+                MDLabel:
+                    text: "Attreya"
+                    font_style: "Subtitle1"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                MDLabel:
+                    text: "attreya01@gmail.com"
+                    size_hint_y: None
+                    font_style: "Caption"
+                    height: self.texture_size[1]
+                ScrollView:
+                    DrawerList:
+                        id: md_list
+                        MDList:
+                            OneLineIconListItem:
+                                text: "Profile"
+                                IconLeftWidget:
+                                    icon: "face-profile"
+
+
+
+                            OneLineIconListItem:
+                                text: "Upload"
+
+                                IconLeftWidget:
+                                    icon: "upload"
+
+
+                            OneLineIconListItem:
+                                text: "Logout"
+
+                                IconLeftWidget:
+                                    icon: "logout"
 
