@@ -45,11 +45,9 @@
         text:'Register Now'
         pos_hint:{'center_x':0.5,'center_y':0.35}
         md_bg_color:'orange'
-        on_press:app.change_screen('register')
+        on_press:root.get_data()
     MDFillRoundFlatButton:
-        id:back_to_login
         text:'Back to Log in'
         pos_hint:{'center_x':0.5,'center_y':0.25}
         md_bg_color:'orange'
-        #on_press:app.change_screen('login')
-        on_press:root.get_data()
+        on_press:root.back_to_login()

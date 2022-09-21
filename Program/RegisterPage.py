@@ -17,3 +17,8 @@ class RegisterWidget(Screen):
 
         if (isSuccess):
             self.parent.current = 'login'
+
+    def back_to_login(self):
+        for cont in self.ids:
+            self.ids[cont].text = ''
+        self.parent.current = 'login'
