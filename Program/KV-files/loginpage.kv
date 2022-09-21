@@ -10,6 +10,7 @@
         password:True
         pos_hint:{'center_x':0.5,'center_y':0.65}
         size_hint_x:None
+        icon_right:'form-textbox-password'
         width:300
     MDIconButton:
         icon:"login-variant"
@@ -17,3 +18,9 @@
         md_bg_color: 'lightblue'
         pos_hint:{'center_x':0.5,'center_y':0.45}
         on_press:root.manager.current='main'
+    MDTextButton:
+        text:'Register Now'
+        pos_hint:{'center_x':0.5,'center_y':0.35}
+        theme_text_color: 'Custom'
+        text_color:'orange'
+        on_press:app.change_screen('main')
