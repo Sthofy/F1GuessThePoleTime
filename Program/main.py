@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.lang import Builder
 from LoginPage import LoginWidget
 from MainPage import MainWidget
+from RegisterPage import RegisterWidget
 
 sm = ScreenManager()
 
@@ -24,7 +25,7 @@ class Main(MDApp):
     def build(self):
         self.root = Builder.load_file('KV-files/root.kv')
 
-        screens = [LoginWidget(name="login"), MainWidget(name='main')]
+        screens = [LoginWidget(name="login"), MainWidget(name='main'),RegisterWidget(name='register')]
 
         for screen in screens:
             sm.add_widget(screen)

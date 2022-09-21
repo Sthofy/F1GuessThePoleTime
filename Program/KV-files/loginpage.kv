@@ -5,6 +5,7 @@
         size_hint_x:None
         icon_right:'account-box'
         width:300
+        focus:True
     MDTextField:
         text:'Password'
         password:True
@@ -19,8 +20,8 @@
         pos_hint:{'center_x':0.5,'center_y':0.45}
         on_press:root.manager.current='main'
     MDTextButton:
-        text:'Register Now'
+        text:'Create an account'
         pos_hint:{'center_x':0.5,'center_y':0.35}
         theme_text_color: 'Custom'
         text_color:'orange'
-        on_press:app.change_screen('main')
+        on_press:app.change_screen('register')

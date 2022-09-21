@@ -1,0 +1,37 @@
+<RegisterWidget>:
+    MDTextField:
+        text:'Username'
+        pos_hint:{'center_x':0.5,'center_y':0.75}
+        size_hint_x:None
+        icon_right:'account-box'
+        width:300
+    MDTextField:
+        text:'Email@email.com'
+        pos_hint:{'center_x':0.5,'center_y':0.65}
+        size_hint_x:None
+        icon_right:'email'
+        width:300
+    MDTextField:
+        text:'Password'
+        password:True
+        pos_hint:{'center_x':0.5,'center_y':0.55}
+        size_hint_x:None
+        icon_right:'form-textbox-password'
+        width:300
+    MDTextField:
+        text:'Password'
+        password:True
+        pos_hint:{'center_x':0.5,'center_y':0.45}
+        size_hint_x:None
+        icon_right:'form-textbox-password'
+        width:300
+    MDFillRoundFlatButton:
+        text:'Register Now'
+        pos_hint:{'center_x':0.5,'center_y':0.35}
+        md_bg_color:'orange'
+        on_press:app.change_screen('register')
+    MDFillRoundFlatButton:
+        text:'Back to Log in'
+        pos_hint:{'center_x':0.5,'center_y':0.25}
+        md_bg_color:'orange'
+        on_press:app.change_screen('login')
