@@ -1,12 +1,12 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 
-import DB_Manager
+from lib.libpy import DB_Manager
 import MainPage as Main
 
 
 class LoginWidget(Screen):
-    Builder.load_file('KV-files/loginpage.kv')
+    Builder.load_file('../libkv/loginpage.kv')
 
     def show_hide_pw(self):
         if self.ids['login_password'].password:

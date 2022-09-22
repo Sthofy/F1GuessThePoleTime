@@ -4,10 +4,9 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 # from LoginPage import LoginWidget
 # from MainPage import MainWidget
-from RegisterPage import RegisterWidget
+from lib.libpy.RegisterPage import RegisterWidget
 
-import LoginPage
-import MainPage
+from lib.libpy import LoginPage, MainPage
 import Models.LoggedInUserModel as LoggedIn
 
 sm = ScreenManager()
@@ -26,7 +25,7 @@ class Main(MDApp):
         super().__init__(**kwargs)
 
     def build(self):
-        self.root = Builder.load_file('KV-files/root.kv')
+        self.root = Builder.load_file('lib/libkv/root.kv')
 
         screens = [LoginPage.LoginWidget(name="login"),
                    MainPage.MainWidget(name='main'),

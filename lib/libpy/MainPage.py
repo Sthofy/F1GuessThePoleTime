@@ -16,7 +16,7 @@ class DrawerList(ThemableBehavior, MDList):
 
 
 class MainWidget(Screen):
-    Builder.load_file('KV-files/mainpage.kv')
+    Builder.load_file('../libkv/mainpage.kv')
 
 
 def create_logged_in_user(data):

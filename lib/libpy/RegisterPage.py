@@ -1,10 +1,10 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-import DB_Manager
+from lib.libpy import DB_Manager
 
 
 class RegisterWidget(Screen):
-    Builder.load_file('KV-files/registerpage.kv')
+    Builder.load_file('../libkv/registerpage.kv')
 
     def get_data(self):
         username = self.ids.register_username.text

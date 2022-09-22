@@ -6,7 +6,7 @@ curs = None
 
 def open_connection():
     global conn, curs
-    conn = sqlite3.connect("Database/F1Guess.db")
+    conn = sqlite3.connect("../../DataBase/F1Guess.db")
     curs = conn.cursor()
 
 
