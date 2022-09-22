@@ -2,12 +2,18 @@ from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 from kivy.lang import Builder
-from LoginPage import LoginWidget
-from MainPage import MainWidget
+# from LoginPage import LoginWidget
+# from MainPage import MainWidget
 from RegisterPage import RegisterWidget
+
+import LoginPage
+import MainPage
+import Models.LoggedInUserModel as LoggedIn
 
 sm = ScreenManager()
 Window.size = (600, 800)
+
+LoggedIn
 
 
 class Main(MDApp):
@@ -22,12 +28,15 @@ class Main(MDApp):
     def build(self):
         self.root = Builder.load_file('KV-files/root.kv')
 
-        screens = [LoginWidget(name="login"), MainWidget(name='main'), RegisterWidget(name='register')]
+        screens = [LoginPage.LoginWidget(name="login"),
+                   MainPage.MainWidget(name='main'),
+                   RegisterWidget(name='register')]
 
         for screen in screens:
             sm.add_widget(screen)
 
         self.change_screen('login')
+
         return sm
 
 
