@@ -14,5 +14,3 @@ class DrawerList(ThemableBehavior, MDList):
 
 class Home(Screen):
     pass
-
-print('ssssssssssssssssssssssssssssssss')

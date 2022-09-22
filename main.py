@@ -22,6 +22,7 @@ Window.softinput_mode = 'below_target'
 class F1Guess(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.theme_cls.primary_palette = "Red"
         self.PYTHON_FILES = "lib/libpy"
         self.KIVY_FILES = "lib/libkv"
 
