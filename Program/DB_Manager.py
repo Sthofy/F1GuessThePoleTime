@@ -5,13 +5,13 @@ conn = None
 curs = None
 
 
-def connect():
+def open_connection():
     global conn, curs
     conn = sqlite3.connect("Database/F1Guess.db")
     curs = conn.cursor()
 
 
-def close():
+def close_connection():
     if conn and curs:
         curs.close()
         conn.close()
@@ -20,11 +20,16 @@ def close():
 def register_user(username, email, password, phone):
     output = False
 
-    if ((len(username) > 0) & (len(email) > 0) & (len(password) > 0) & (len(phone) > 0)):
+    if (len(username) > 0) & (len(email) > 0) & (len(password) > 0) & (len(phone) > 0):
         try:
+            open_connection()
+
             curs.execute("INSERT INTO User_Credential (username, email, password, phone) VALUES (?, ?, ?, ?)",
                          (username, email, password, phone))
             conn.commit()
+
+            close_connection()
+
             output = True
         except Exception as e:
             print(e)
@@ -35,9 +40,13 @@ def register_user(username, email, password, phone):
 def login_user(username, password):
     try:
         line = []
-        connect()
+        open_connection()
+
         curs.execute(f'''SELECT * FROM User_Credential WHERE username="{username}" AND password="{password}"''')
         datas = curs.fetchall()
+
+        close_connection()
+
         for data in datas:
             line = data
 

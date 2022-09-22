@@ -11,9 +11,8 @@ class RegisterWidget(Screen):
         email = self.ids.register_email.text
         password = self.ids.register_password.text
         phone = self.ids.register_phone.text
-        DB_Manager.connect()
+
         is_success = DB_Manager.register_user(username, email, password, phone)
-        DB_Manager.close()
 
         if is_success:
             self.parent.current = 'login'
