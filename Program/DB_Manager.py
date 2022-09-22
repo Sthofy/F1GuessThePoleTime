@@ -1,5 +1,4 @@
 import sqlite3
-import Models.LoggedInUserModel as LoggedInUserModel
 
 conn = None
 curs = None
@@ -50,13 +49,7 @@ def login_user(username, password):
         for data in datas:
             line = data
 
-        LoggedInUserModel.uid = line[0]
-        LoggedInUserModel.username = line[1]
-        LoggedInUserModel.email = line[2]
-        LoggedInUserModel.password = line[3]
-        LoggedInUserModel.phone = line[4]
-
     except Exception as e:
         print(e)
 
-    return LoggedInUserModel
+    return line
