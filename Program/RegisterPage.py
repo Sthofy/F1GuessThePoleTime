@@ -12,10 +12,10 @@ class RegisterWidget(Screen):
         password = self.ids.register_password.text
         phone = self.ids.register_phone.text
         DB_Manager.connect()
-        isSuccess = DB_Manager.register_user(username, email, password, phone)
+        is_success = DB_Manager.register_user(username, email, password, phone)
         DB_Manager.close()
 
-        if (isSuccess):
+        if is_success:
             self.parent.current = 'login'
 
     def back_to_login(self):
