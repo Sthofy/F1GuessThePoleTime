@@ -3,7 +3,7 @@ import bcrypt
 
 
 def perform_insert(sql, params):
-    conn = sqlite3.connect("DataBase/F1Guess.db")
+    conn = sqlite3.connect("Database/F1Guess.db")
     curs = conn.cursor()
 
     curs.execute(sql, params)
@@ -14,7 +14,7 @@ def perform_insert(sql, params):
 
 
 def perform_select(sql, params):
-    conn = sqlite3.connect("DataBase/F1Guess.db")
+    conn = sqlite3.connect("Database/F1Guess.db")
     conn.row_factory = sqlite3.Row
     curs = conn.cursor()
 
