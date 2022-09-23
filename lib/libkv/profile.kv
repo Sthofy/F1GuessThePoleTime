@@ -5,6 +5,7 @@
             id:sm
             MDScreen:
                 name:'Profile'
+                md_bg_color:56/255,40/255,81/255,1
                 MDTopAppBar:
                     title:"Profile"
                     elevation:5
@@ -18,27 +19,13 @@
                     padding:25
                     spacing:25
                     orientation:'vertical'
-                    md_bg_color: 'gray'
+                    md_bg_color:1,1,1,1
         MDNavigationDrawer:
             id:nav_drawer
             ContentNavigationDrawer:
                 orientation: 'vertical'
                 padding: "8dp"
                 spacing: "8dp"
-#                Image:
-#                    id: avatar
-#                    size_hint: (1,1)
-##                    source: "mine.jpg"
-#                MDLabel:
-#                    text: "Attreya"
-#                    font_style: "Subtitle1"
-#                    size_hint_y: None
-#                    height: self.texture_size[1]
-#                MDLabel:
-#                    text: "attreya01@gmail.com"
-#                    size_hint_y: None
-#                    font_style: "Caption"
-#                    height: self.texture_size[1]
                 ScrollView:
                     DrawerList:
                         id: md_list

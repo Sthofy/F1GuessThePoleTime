@@ -15,7 +15,7 @@ if platform == "win32":
     environ["KIVY_GL_BACKEND"] = "angle_sdl2"
 
 Config.set("kivy", "exit_on_escape", "0")
-Window.size=(600,800)
+Window.size = (600, 800)
 Window.softinput_mode = 'below_target'
 
 
@@ -27,9 +27,9 @@ class F1Guess(MDApp):
         self.KIVY_FILES = "lib/libkv"
 
     def build(self):
-        from kivy import platform
-        if platform == "android":
-            self.start_service()
+        # from kivy import platform
+        # if platform == "android":
+        #     self.start_service()
         return Builder.load_file("manager.kv")
 
     def on_start(self):
