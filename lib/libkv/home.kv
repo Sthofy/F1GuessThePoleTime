@@ -5,28 +5,46 @@
             id:sm
             MDScreen:
                 name:'Main'
+                md_bg_color:56/255,40/255,81/255,1
                 MDTopAppBar:
                     title:"Main"
                     elevation:5
                     pos_hint:{"top":1}
                     left_action_items: [['menu',lambda x:nav_drawer.set_state('open')]]
                     right_action_items:[['logout-variant',lambda x: root.manager.change_screen('login'),"Log Out"]]
-            MDScreen:
-                name:'Profile'
-                MDTopAppBar:
-                    title:"Profile"
-                    elevation:5
-                    pos_hint:{"top":1}
-                    left_action_items: [['menu',lambda x:nav_drawer.set_state('open')]]
-                    right_action_items:[['logout-variant',lambda x: root.manager.change_screen('login'),"Log Out"]]
-                MDCard:
-                    size_hint:None,None
-                    size:400,500
-                    pos_hint:{'center_x':0.5,'center_y':0.5}
-                    padding:25
-                    spacing:25
-                    orientation:'vertical'
-                    md_bg_color: 'gray'
+                MDGridLayout:
+                    size_hint_y:.75
+                    cols:2
+                    padding:'15dp'
+                    pos_hint:{'center_x':0.5,'center_y':0.55}
+                    StandingCard:
+                        text:"Calendar"
+                        image:'assets/images/calendar.png'
+                        subtext:"Remaining events"
+
+                MDGridLayout:
+                    size_hint_y:.75
+                    cols:2
+                    padding: '15dp'
+                    spacing: '15dp'
+                    pos_hint:{'center_x':0.5,'center_y':0.2}
+                    ElementCard:
+                        text:"Calendar"
+                        image:'assets/images/calendar.png'
+                        subtext:"Remaining events."
+                    ElementCard:
+                        text:"Circuits"
+                        image:'assets/images/circuit.png'
+                        subtext:"Circuits in the calendar."
+                    ElementCard:
+                        text:"Standings"
+                        image:'assets/images/cup_v2.png'
+                        subtext:"Driver standing."
+                    ElementCard:
+                        text:"Your Guess"
+                        image:'assets/images/time.png'
+                        subtext:"All your guess and points."
+
         MDNavigationDrawer:
             id:nav_drawer
             ContentNavigationDrawer:
@@ -52,16 +70,50 @@
                         id: md_list
                         MDList:
                             OneLineIconListItem:
-                                text: "Main"
-                                on_release:
-                                    sm.current='Main'
-                                    root.ids.nav_drawer.set_state('close')
-                                IconLeftWidget:
-                                    icon: "home"
-                            OneLineIconListItem:
                                 text: "Profile"
                                 on_press:
-                                    sm.current='Profile'
+                                    root.manager.current="profile"
                                     root.ids.nav_drawer.set_state('close')
                                 IconLeftWidget:
                                     icon: "account-cog"
+
+
+<StandingCard@MDCard>
+    md_bg_color:69/255,55/255,86/255,1
+    orientation:'vertical'
+    size_hint_y:None
+    height: '250dp'
+    radius: '20dp'
+    ripple_behavior: True
+    image:''
+    text:''
+    subtext:''
+
+    MDLabel:
+        halign:"center"
+        text:root.text
+    Image:
+        source:root.image
+    MDLabel:
+        halign:"center"
+        text:root.subtext
+<ElementCard@MDCard>
+    md_bg_color:69/255,55/255,86/255,1
+    orientation:'vertical'
+    size_hint_y:None
+    height: '175dp'
+    padding: '10dp'
+    radius: '20dp'
+    ripple_behavior: True
+    image:''
+    text:''
+    subtext:''
+
+    MDLabel:
+        halign:"center"
+        text:root.text
+    Image:
+        source:root.image
+    MDLabel:
+        halign:"center"
+        text:root.subtext
