@@ -43,7 +43,7 @@ class F1Guess(MDApp):
         Clock.schedule_once(
             lambda x: exec("self.root.current = 'manager'", {"self": self}))
         Clock.schedule_once(
-            lambda x: exec("self.root.ids.manager.children[0].current = 'profile'", {"self": self}))  # , timeout=2)
+            lambda x: exec("self.root.ids.manager.children[0].current = 'login'", {"self": self}))  # , timeout=2)
 
     def load_screens(self):
         # -------- import python screens -------- #
