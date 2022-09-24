@@ -39,3 +39,31 @@ def login_user(username):
     params = (username,)
 
     return perform_select(sql, params)
+
+
+def update_user(col, data, uid):
+    if col == "username":
+        slq = "UPDATE User_Credential SET username=? WHERE id=? "
+        params = (data, uid)
+        perform_insert(slq, params)
+    elif col == "password":
+        sql = "UPDATE User_Credential SET password=? WHERE id=? "
+        password = bcrypt.hashpw(bytes(data, encoding="utf-8"), bcrypt.gensalt())
+        params = (password, uid)
+        print(sql, params)
+        # perform_insert(slq, params)
+    elif col == "email":
+        sql = "UPDATE User_Credential SET email=? WHERE id=? "
+        params = (data, uid)
+        print(sql, params)
+        perform_insert(sql, params)
+    elif col == "phone":
+        sql = "UPDATE User_Credential SET phone=? WHERE id=? "
+        params = (data, uid)
+        print(sql, params)
+        perform_insert(sql, params)
+    elif col == "delete":
+        sql = "DELETE FROM User_Credential WHERE id=?"
+        params = (uid,)
+        print(sql, params)
+        perform_insert(sql, params)
