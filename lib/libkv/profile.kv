@@ -14,30 +14,42 @@
                     right_action_items:[['logout-variant',lambda x: root.manager.change_screen('login'),"Log Out"]]
                 MDGridLayout:
                     size_hint_y:.75
-                    cols:2
-                    padding: '15dp'
-                    spacing: '15dp'
                     pos_hint:{'center_x':0.5,'center_y':0.5}
-                    PElementCard:
-                        text:"Change Username"
-                        image:'assets/images/profile.png'
-                        on_release:
-                            root.show_custom_bottom_sheet('Username')
-                    PElementCard:
-                        text:"Change Email"
-                        image:'assets/images/email.png'
-                        on_release:
-                            root.show_custom_bottom_sheet('Email')
-                    PElementCard:
-                        text:"Change Password"
-                        image:'assets/images/reset-password.png'
-                        on_release:
-                            root.show_custom_bottom_sheet('Password')
-                    PElementCard:
-                        text:"Change Phone Number"
-                        image:'assets/images/telephone.png'
-                        on_release:
-                            root.show_custom_bottom_sheet('Phone')
+                    cols:1
+                    padding:"20dp"
+                    MDList:
+                        md_bg_color:1,1,1,1
+                        spacing:"20dp"
+                        OneLineIconListItem:
+                            text:"Change Username"
+                            on_release:
+                                root.show_username()
+                            ImageLeftWidget:
+                                source:"assets/images/profile.png"
+                        OneLineIconListItem:
+                            text:"Change Email"
+                            on_release:
+                                root.show_email()
+                            ImageLeftWidget:
+                                source:"assets/images/email.png"
+                        OneLineIconListItem:
+                            text:"Change Password"
+                            on_release:
+                                root.show_password()
+                            ImageLeftWidget:
+                                source:"assets/images/reset-password.png"
+                        OneLineIconListItem:
+                            text:"Change Phone"
+                            on_release:
+                                root.show_phone()
+                            ImageLeftWidget:
+                                source:"assets/images/telephone.png"
+                        OneLineIconListItem:
+                            text:"Delete Account"
+                            on_release:
+                                root.show_delete()
+                            ImageLeftWidget:
+                                source:"assets/images/delete.png"
         MDNavigationDrawer:
             id:nav_drawer
             ContentNavigationDrawer:
@@ -56,102 +68,52 @@
                                 IconLeftWidget:
                                     icon: "home"
 
-<UsernameSheet@MDBoxLayout>:
+<ChangeUsername>:
     orientation: "vertical"
+    spacing: "12dp"
+    radius:"20dp"
     size_hint_y: None
-    height:'200dp'
+    height: "50dp"
 
     MDTextField:
-        id:change_username
-        hint_text:'Username'
-        helper_text: 'This field is required'
-        helper_text_mode:'on_error'
-        pos_hint:{'center_x':0.5,'center_y':0.75}
-        size_hint_x:None
-        icon_right:'account-box'
-        width:300
+        id:n_username
+        hint_text: "New Username"
 
-<EmailSheet@MDBoxLayout>:
+<ChangeEmail>:
     orientation: "vertical"
+    spacing: "12dp"
+    radius:"20dp"
     size_hint_y: None
-    height:'200dp'
+    height: "50dp"
 
     MDTextField:
-        id:change_email
-        hint_text:'Email@email.com'
-        pos_hint:{'center_x':0.5,'center_y':0.65}
-        size_hint_x:None
-        icon_right:'email'
-        width:300
-<PasswordSheet@MDBoxLayout>:
+        id:n_email
+        hint_text: "New Email"
+
+<ChangePhone>:
     orientation: "vertical"
+    spacing: "12dp"
+    radius:"20dp"
     size_hint_y: None
-    height:'200dp'
+    height: "50dp"
 
     MDTextField:
-        id:change_password_old
-        hint_text:'Old Password'
-        password:True
-        pos_hint:{'center_x':0.5,'center_y':0.55}
-        size_hint_x:None
-        icon_right:'form-textbox-password'
-        width:300
-    MDTextField:
-        id:change_password
-        hint_text:'New Password'
-        password:True
-        pos_hint:{'center_x':0.5,'center_y':0.55}
-        size_hint_x:None
-        icon_right:'form-textbox-password'
-        width:300
-<PhoneSheet@MDBoxLayout>:
+        id:n_phone
+        hint_text: "New Phone"
+
+<ChangePassword>:
     orientation: "vertical"
+    spacing: "12dp"
+    radius:"20dp"
     size_hint_y: None
-    height:'100dp'
-    MDGridLayout:
-        size_hint_y:.75
-        cols:2
-        padding: '15dp'
-        spacing: '15dp'
-        pos_hint:{'center_x':0.5,'center_y':0.5}
-        adaptive_width:"True"
-        MDTextField:
-            id:change_phone
-            hint_text:'Phone'
-            size_hint_x:None
-            icon_right:'cellphone'
-            width:300
-        MDFillRoundFlatButton:
-            id:btn
-            text:"Change"
-            size_hint_x:None
-#    MDFillRoundFlatButton:
-#        text:'Register Now'
-#        pos_hint:{'center_x':0.5,'center_y':0.35}
-#        md_bg_color:'orange'
-#        on_press:root.get_data()
+    height: "150dp"
 
-<PElementCard@MDCard>
-    md_bg_color:69/255,55/255,86/255,1
-    orientation:'vertical'
-    size_hint_y:None
-    height: '175dp'
-    padding: '10dp'
-    radius: '20dp'
-    ripple_behavior: True
-#    on_release:
-#        app.show_custom_bottom_sheet()
-    image:''
-    text:''
-    subtext:''
+    MDTextField:
+        id:old_password
+        hint_text: "Old Password"
+        password: True
 
-    MDLabel:
-        halign:"center"
-        text:root.text
-    Image:
-        source:root.image
-        size_hint_y:3
-        allow_stretch:True
-    MDLabel:
-        halign:"center"
-        text:root.subtext
+    MDTextField:
+        id:new_password
+        hint_text: "New Password"
+        password: True
