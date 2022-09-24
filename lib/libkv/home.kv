@@ -17,7 +17,7 @@
                     cols:2
                     padding:'15dp'
                     pos_hint:{'center_x':0.5,'center_y':0.55}
-                    StandingCard:
+                    StarterCard:
                         text:"Calendar"
                         image:'assets/images/calendar.png'
                         subtext:"Remaining events"
@@ -64,7 +64,7 @@
                                     icon: "account-cog"
 
 
-<StandingCard@MDCard>
+<StarterCard@MDCard>
     md_bg_color:69/255,55/255,86/255,1
     orientation:'vertical'
     size_hint_y:None
@@ -94,6 +94,7 @@
     image:''
     text:''
     subtext:''
+    on_release:
 
     MDLabel:
         halign:"center"

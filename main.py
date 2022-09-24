@@ -36,14 +36,14 @@ class F1Guess(MDApp):
         Process(target=self.initiate_load_sequence).start()
 
     def initiate_load_sequence(self):
-        sleep(3)
+        # sleep(3)
         self.load_screens()
         Clock.schedule_once(
             lambda x: exec("self.root.ids.manager.add_widget(Factory.Manager())", {"self": self, "Factory": Factory}))
         Clock.schedule_once(
             lambda x: exec("self.root.current = 'manager'", {"self": self}))
         Clock.schedule_once(
-            lambda x: exec("self.root.ids.manager.children[0].current = 'login'", {"self": self}), timeout=2)
+            lambda x: exec("self.root.ids.manager.children[0].current = 'profile'", {"self": self}))  # , timeout=2)
 
     def load_screens(self):
         # -------- import python screens -------- #

@@ -18,9 +18,9 @@ class Login(Screen):
             curr_password = self.ids['login_password'].text
 
             req = DB_Manager.login_user(username)
-            hash = req[0]["password"]
+            pw_hash = req[0]["password"]
 
-            if bcrypt.checkpw(bytes(curr_password, encoding='utf-8'), hash):
+            if bcrypt.checkpw(bytes(curr_password, encoding='utf-8'), pw_hash):
                 self.manager.current = 'home'
 
         except Exception as e:
