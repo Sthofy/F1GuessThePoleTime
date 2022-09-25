@@ -29,17 +29,23 @@
                     spacing: '15dp'
                     pos_hint:{'center_x':0.5,'center_y':0.2}
                     ElementCard:
-                        text:"Calendar"
+                        text:"Schedule"
                         image:'assets/images/calendar.png'
                         subtext:"Remaining events."
+                        on_release:
+                            root.show_schedule()
                     ElementCard:
                         text:"Circuits"
                         image:'assets/images/circuit.png'
                         subtext:"Circuits in the calendar."
+                        on_release:
+                            root.show_track_list()
                     ElementCard:
                         text:"Standings"
                         image:'assets/images/cup_v2.png'
                         subtext:"Driver standing."
+                        on_release:
+                            root.show_standings()
                     ElementCard:
                         text:"Your Guess"
                         image:'assets/images/time.png'
@@ -94,7 +100,6 @@
     image:''
     text:''
     subtext:''
-    on_release:
 
     MDLabel:
         halign:"center"
@@ -104,3 +109,16 @@
     MDLabel:
         halign:"center"
         text:root.subtext
+
+<TrackList>:
+    BoxLayout:
+        id:table
+
+<Schedule>:
+    BoxLayout:
+        id:table
+
+
+<Standings>:
+    BoxLayout:
+        id:table
