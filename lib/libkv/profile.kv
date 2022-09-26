@@ -39,12 +39,6 @@
                             ImageLeftWidget:
                                 source:"assets/images/reset-password.png"
                         OneLineIconListItem:
-                            text:"Change Phone"
-                            on_release:
-                                root.show_phone()
-                            ImageLeftWidget:
-                                source:"assets/images/telephone.png"
-                        OneLineIconListItem:
                             text:"Delete Account"
                             on_release:
                                 root.show_delete()
@@ -89,17 +83,6 @@
     MDTextField:
         id:n_email
         hint_text: "New Email"
-
-<ChangePhone>:
-    orientation: "vertical"
-    spacing: "12dp"
-    radius:"20dp"
-    size_hint_y: None
-    height: "50dp"
-
-    MDTextField:
-        id:n_phone
-        hint_text: "New Phone"
 
 <ChangePassword>:
     orientation: "vertical"

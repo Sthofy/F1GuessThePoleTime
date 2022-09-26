@@ -8,9 +8,8 @@ class Register(Screen):
             username = self.ids['register_username'].text
             email = self.ids['register_email'].text
             password = self.ids['register_password'].text
-            phone = self.ids['register_phone'].text
 
-            if DB_Manager.register_user(username, email, password, phone):
+            if DB_Manager.register_user(username, email, password):
                 self.manager.current = 'login'
             else:
                 print('No')

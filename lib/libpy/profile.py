@@ -16,10 +16,6 @@ class ChangeEmail(BoxLayout):
     pass
 
 
-class ChangePhone(BoxLayout):
-    pass
-
-
 class ChangePassword(BoxLayout):
     pass
 
@@ -58,26 +54,6 @@ class Profile(Screen):
     def show_email(self):
         if not self.dialog:
             content_cls = ChangeEmail()
-            self.dialog = MDDialog(
-                title="Are you want to change your Email address?",
-                type="custom",
-                content_cls=content_cls,
-                buttons=[
-                    MDFlatButton(
-                        text="CANCEL",
-                        on_release=self.submit
-                    ),
-                    MDRaisedButton(
-                        text="ACCEPT",
-                        on_release=lambda x: self.change(x, content_cls)
-                    ),
-                ],
-            )
-        self.dialog.open()
-
-    def show_phone(self):
-        if not self.dialog:
-            content_cls = ChangePhone()
             self.dialog = MDDialog(
                 title="Are you want to change your Email address?",
                 type="custom",
@@ -142,18 +118,11 @@ class Profile(Screen):
         # TODO: get the logged in user id
         # TODO: check the input fields is not null
         if type(content) is ChangeUsername:
-            print("U")
             DB_Manager.update_user("username", content.ids.n_username.text, 2)
         elif type(content) is ChangeEmail:
-            print("E")
             DB_Manager.update_user("email", content.ids.n_email.text, 2)
-        elif type(content) is ChangePhone:
-            print("P")
-            DB_Manager.update_user("phone", content.ids.n_phone.text, 2)
         elif type(content) is ChangePassword:
-            print("PW")
             DB_Manager.update_user("password", content.ids.new_password.text, 2)
         else:
-            print("D")
             DB_Manager.update_user("delete", content, 2)
         self.submit()
