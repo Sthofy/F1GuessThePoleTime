@@ -28,19 +28,20 @@ def get_driver_standings():
 
 
 def get_schedule():
-    url = "https://m4sport.hu/f1-pontverseny/"
-    soup = set_soup(url)
-
-    table = soup.find('div', class_='F1-racelist')
     dates = []
     places = []
-    for r in table.find_all('div', class_='F1-raceDate'):
-        dates.append(r.find('span').text)
+    url = "https://m4sport.hu/f1-versenynaptar/?event=361"
+    soup = set_soup(url)
 
-    for p in table.find_all('div', class_='F1-racePlace'):
-        places.append(p.find('span').text)
+    table_cicuits = soup.find('div', class_='F1-RaceSelectorList')
+
+    for t in table_cicuits.find_all("span", class_="F1-raceCity"):
+        places.append(t.text)
+
+    for t in table_cicuits.find_all("div", class_="raceDate"):
+        dates.append(t.find("span").text)
+
     output = (dates, places)
-
     return output
 
 
@@ -84,6 +85,41 @@ def get_teams_standig():
     output = (pos, name, points)
 
     return output
+
+
+def get_qualification_results():
+    url = "https://m4sport.hu/f1-versenynaptar/?event="
+    event_number = 361
+    soup = set_soup(url + str(event_number))
+    table = soup.find("div", class_="raceResultsTable practice")
+    laptimes = []
+    driver_names = []
+    circuits = []
+
+    condition = table is not None
+
+    while condition:
+        time_rows = table.find_all("div", class_="lapTime")
+        laptimes.append(time_rows[1].text)
+        driver_names.append(table.find("span", class_="pilotNameLong").text)
+        circuits.append(get_circuit_name(soup))
+
+        event_number += 3
+        soup = set_soup(url + str(event_number))
+        table = soup.find("div", class_="raceResultsTable practice")
+        condition = table is not None
+
+        if not condition:
+            break
+
+    output = (driver_names, laptimes, circuits)
+    return output
+
+
+def get_circuit_name(soup):
+    table = soup.find("a", class_="F1-raceUnit active")
+    circuit_name = table.find("span", class_="F1-raceCity").text
+    return circuit_name
 
 
 def get_driver_related_data():

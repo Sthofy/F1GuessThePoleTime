@@ -85,25 +85,25 @@ def date_parser(date):
     x = datetime.datetime.now()
 
     sliced = date.split()
-    if sliced[0] == "már.":
+    if sliced[0] == "március":
         return datetime.datetime(int(x.strftime("%Y")), 3, int(sliced[1][:-1]))
-    elif sliced[0] == "ápr.":
+    elif sliced[0] == "április":
         return datetime.datetime(int(x.strftime("%Y")), 4, int(sliced[1][:-1]))
-    elif sliced[0] == "máj.":
+    elif sliced[0] == "május":
         return datetime.datetime(int(x.strftime("%Y")), 5, int(sliced[1][:-1]))
-    elif sliced[0] == "jún.":
+    elif sliced[0] == "június":
         return datetime.datetime(int(x.strftime("%Y")), 6, int(sliced[1][:-1]))
-    elif sliced[0] == "júl.":
+    elif sliced[0] == "július":
         return datetime.datetime(int(x.strftime("%Y")), 7, int(sliced[1][:-1]))
-    elif sliced[0] == "aug.":
+    elif sliced[0] == "augusztus":
         return datetime.datetime(int(x.strftime("%Y")), 8, int(sliced[1][:-1]))
-    elif sliced[0] == "szept.":
+    elif sliced[0] == "szeptember":
         return datetime.datetime(int(x.strftime("%Y")), 9, int(sliced[1][:-1]))
-    elif sliced[0] == "okt.":
+    elif sliced[0] == "október":
         return datetime.datetime(int(x.strftime("%Y")), 10, int(sliced[1][:-1]))
-    elif sliced[0] == "nov.":
+    elif sliced[0] == "november":
         return datetime.datetime(int(x.strftime("%Y")), 11, int(sliced[1][:-1]))
-    elif sliced[0] == "dec.":
+    elif sliced[0] == "december":
         return datetime.datetime(int(x.strftime("%Y")), 12, int(sliced[1][:-1]))
 
     return 0
@@ -151,6 +151,42 @@ def insert_drivers(conn, curs, data):
             conn.commit()
 
 
+def insert_qualifications_resilts(conn, curs, data):
+    sql = "INSERT INTO Qualification_Results (driver_id, circuit_id, time) VALUES (?, ?, ?)"
+    curs.execute("SELECT * FROM Qualification_Results")
+    result = curs.fetchall()
+    driver_names = data[0]
+    times = data[1]
+    circuits = data[2]
+
+    driver_ids = []
+    circuit_ids = []
+
+    for d in driver_names:
+        driver_ids.append(get_driver_id(curs, d))
+
+    for d in circuits:
+        circuit_ids.append(get_circuit_id(curs, d))
+
+    if len(result) < len(times):
+        for i in range(len(driver_ids)):
+            curs.execute(sql, (driver_ids[i][0], circuit_ids[i][0], times[i]))
+            conn.commit()
+
+
+def get_driver_id(curs, driver):
+    curs.execute(f'SELECT driver_number FROM Drivers WHERE driver_name_long="{driver}"')
+    output = [row[0] for row in curs.fetchall()]
+    return output
+
+
+def get_circuit_id(curs, circuit):
+    curs.execute(f'SELECT id FROM Tracks WHERE location="{circuit}"')
+    output = [row[0] for row in curs.fetchall()]
+
+    return output
+
+
 def load_data_from_web():
     conn = sqlite3.connect("Database/F1Guess.db")
     curs = conn.cursor()
@@ -160,6 +196,7 @@ def load_data_from_web():
     insert_team_standings(conn, curs, dataGetter.get_teams_standig())
     insert_driver_standings(conn, curs, dataGetter.get_driver_standings())
     insert_drivers(conn, curs, dataGetter.get_drivers())
+    insert_qualifications_resilts(conn, curs, dataGetter.get_qualification_results())
 
     curs.close()
     conn.close()

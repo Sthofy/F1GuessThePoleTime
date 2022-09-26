@@ -35,11 +35,10 @@ class F1Guess(MDApp):
         return Builder.load_file("manager.kv")
 
     def on_start(self):
-        Process(target=self.load_database()).start()
         Process(target=self.initiate_load_sequence).start()
 
     def initiate_load_sequence(self):
-        # sleep(3)
+        sleep(3)
         self.load_screens()
         Clock.schedule_once(
             lambda x: exec("self.root.ids.manager.add_widget(Factory.Manager())", {"self": self, "Factory": Factory}))
@@ -47,6 +46,7 @@ class F1Guess(MDApp):
             lambda x: exec("self.root.current = 'manager'", {"self": self}))
         Clock.schedule_once(
             lambda x: exec("self.root.ids.manager.children[0].current = 'login'", {"self": self}))  # , timeout=2)
+        Process(target=self.load_database()).start()
 
     def load_screens(self):
         # -------- import python screens -------- #
