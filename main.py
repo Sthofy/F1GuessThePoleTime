@@ -9,6 +9,8 @@ from kivy.factory import Factory
 from kivy.lang import Builder
 from kivymd.app import MDApp
 
+import DB_Manager
+
 if platform == "win32":
     from os import environ
 
@@ -33,6 +35,7 @@ class F1Guess(MDApp):
         return Builder.load_file("manager.kv")
 
     def on_start(self):
+        Process(target=self.load_database()).start()
         Process(target=self.initiate_load_sequence).start()
 
     def initiate_load_sequence(self):
@@ -58,8 +61,8 @@ class F1Guess(MDApp):
             Builder.load_file(f"{self.KIVY_FILES}/{kv}")
         # --------------------------------------- #
 
-    # def login(self):
-    #     User(self).login()
+    def load_database(self):
+        DB_Manager.load_data_from_web()
 
 
 F1Guess().run()

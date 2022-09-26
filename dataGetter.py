@@ -9,49 +9,18 @@ def set_soup(url):
     return soup
 
 
-def get_tracks():
-    url = 'https://m4sport.hu/f1-versenynaptar'
-    soup = set_soup(url)
-
-    tracks = {}
-    table = soup.find('div', class_='F1-RaceSelectorList')
-    i = 1
-    for t in table.find_all(lambda tag: tag.name == 'div' and tag.get('class') == ['F1-raceUnitPlace']):
-        # tracks.append(t.find('span', class_='F1-raceCountry').text)
-        tracks[i] = t.find('span', class_='F1-raceCountry').text
-        i += 1
-
-    return tracks
-
-
 def get_driver_standings():
-    url = "https://m4sport.hu/f1-pontverseny/"
-    soup = set_soup(url)
-
-    table = soup.find('table')  # Az egész tabella
-    rows = []  # Soronként az adaton <span></span> tagekben az első üres az tartalmazza a fejlécet.
-    # Helyezés,Rajtszám,Teljes név,Rövidített név,Csapat teljes neve,Csapat Rövid neve,Pontszám
+    rows = get_driver_related_data()
     pos = []
     drivers = []
     teams = []
     points = []
 
-    for t in table.find_all('tr'):
-        rows.append(t.find_all('span'))
-
-    del rows[0]
-
-    for p in rows:
-        pos.append(p[0].text)
-
-    for d in rows:
-        drivers.append(d[2].text)
-
-    for t in rows:
-        teams.append(t[5].text)
-
-    for dp in rows:
-        points.append(dp[6].text)
+    for data in rows:
+        pos.append(data[0].text)
+        drivers.append(data[2].text)
+        teams.append(data[5].text)
+        points.append(data[6].text)
 
     output = (pos, drivers, teams, points)
 
@@ -71,5 +40,63 @@ def get_schedule():
     for p in table.find_all('div', class_='F1-racePlace'):
         places.append(p.find('span').text)
     output = (dates, places)
+
+    return output
+
+
+def get_drivers():
+    rows = get_driver_related_data()
+    driver_numbers = []
+    driver_names_long = []
+    driver_names_short = []
+    teams = []
+
+    for data in rows:
+        driver_numbers.append(data[1].text)
+        driver_names_long.append((data[2]).text)
+        driver_names_short.append(data[3].text)
+        teams.append(data[5].text)
+
+    output = (driver_numbers, driver_names_long, driver_names_short, teams)
+
+    return output
+
+
+def get_teams_standig():
+    url = "https://m4sport.hu/f1-pontverseny/"
+    soup = set_soup(url)
+
+    rows = []
+    pos = []
+    name = []
+    points = []
+    table = soup.find_all('table')
+    for t in table[1].find_all('tr'):
+        rows.append(t.find_all('span'))
+
+    del rows[0]
+
+    for data in rows:
+        pos.append(data[0].text)
+        name.append(data[1].text)
+        points.append(data[3].text)
+
+    output = (pos, name, points)
+
+    return output
+
+
+def get_driver_related_data():
+    url = "https://m4sport.hu/f1-pontverseny/"
+    soup = set_soup(url)
+
+    table = soup.find('table')  # Az egész tabella
+    output = []  # Soronként az adaton <span></span> tagekben az első üres az tartalmazza a fejlécet.
+    # Helyezés,Rajtszám,Teljes név,Rövidített név,Csapat teljes neve,Csapat Rövid neve,Pontszám
+
+    for t in table.find_all('tr'):
+        output.append(t.find_all('span'))
+
+    del output[0]  # Az üres sor törlése
 
     return output
