@@ -128,10 +128,17 @@
 <Guess>:
     orientation: "vertical"
     spacing: "12dp"
-    radius:"20dp"
     size_hint_y: None
-    height: "50dp"
+    height: "150dp"
+
+    MDDropDownItem:
+        id: drop_item
+        text: "Who will get the Pole position?"
+        on_release: root.menu.open()
 
     MDTextField:
-        id:n_guess
+        id:guess_time
         hint_text: "What will the pole time?"
+
+<IconListItem>:
+    id:list

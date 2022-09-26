@@ -6,7 +6,10 @@ from kivymd.theming import ThemableBehavior
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.list import MDList
+from kivymd.uix.menu import MDDropdownMenu
+
 import dataGetter
 
 
@@ -78,6 +81,33 @@ class Standings(BoxLayout):
 
 
 class Guess(BoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
+        data = dataGetter.get_drivers()
+        drivers = data[1]
+
+        drivers_drop = [
+            {
+                "viewclass": "IconListItem",
+                "text": f"{drivers[i]}",
+                "height": dp(56),
+                "on_release": lambda x=drivers[i]: self.set_item(x),
+            } for i in range(len(drivers))]
+
+        self.menu = MDDropdownMenu(
+            caller=self.ids.drop_item,
+            items=drivers_drop,
+            position="center",
+            width_mult=4,
+        )
+        self.menu.bind()
+
+    def set_item(self, text_item):
+        self.ids.drop_item.set_item(text_item)
+        self.menu.dismiss()
+
+
+class IconListItem(OneLineIconListItem):
     pass
 
 
@@ -151,14 +181,16 @@ class Home(Screen):
                     ),
                     MDRaisedButton(
                         text="Guess",
-                        on_release=lambda x: self.save_guess()
+                        on_release=lambda x: self.save_guess(content_cls)
                     ),
                 ],
             )
         self.dialog.open()
 
-    def save_guess(self):
-        print("saved")
+    def save_guess(self, form):
+        driver = form.ids.drop_item.current_item
+        time = form.ids.guess_time.text
+
 
     def submit(self, *args):
         self.dialog.dismiss(force=True)
