@@ -77,6 +77,10 @@ class Standings(BoxLayout):
         self.table.add_widget(md_table)
 
 
+class Guess(BoxLayout):
+    pass
+
+
 class ContentNavigationDrawer(BoxLayout):
     pass
 
@@ -132,6 +136,29 @@ class Home(Screen):
             )
             btn.bind(on_release=self.submit)
         self.dialog.open()
+
+    def show_guess(self):
+        if not self.dialog:
+            content_cls = Guess()
+            self.dialog = MDDialog(
+                title="Who will win the Qualification?",
+                type="custom",
+                content_cls=content_cls,
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        on_release=self.submit
+                    ),
+                    MDRaisedButton(
+                        text="Guess",
+                        on_release=lambda x: self.save_guess()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def save_guess(self):
+        print("saved")
 
     def submit(self, *args):
         self.dialog.dismiss(force=True)

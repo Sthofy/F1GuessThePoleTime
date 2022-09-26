@@ -14,7 +14,7 @@
                     right_action_items:[['logout-variant',lambda x: root.manager.change_screen('login'),"Log Out"]]
                 MDGridLayout:
                     size_hint_y:.75
-                    cols:2
+                    cols:1
                     padding:'15dp'
                     pos_hint:{'center_x':0.5,'center_y':0.55}
                     StarterCard:
@@ -50,6 +50,8 @@
                         text:"Your Guess"
                         image:'assets/images/time.png'
                         subtext:"All your guess and points."
+                        on_release:
+                            root.show_guess()
 
         MDNavigationDrawer:
             id:nav_drawer
@@ -122,3 +124,14 @@
 <Standings>:
     BoxLayout:
         id:table
+
+<Guess>:
+    orientation: "vertical"
+    spacing: "12dp"
+    radius:"20dp"
+    size_hint_y: None
+    height: "50dp"
+
+    MDTextField:
+        id:n_guess
+        hint_text: "What will the pole time?"
