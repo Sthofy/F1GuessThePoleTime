@@ -118,11 +118,11 @@ class Profile(Screen):
         # TODO: get the logged in user id
         # TODO: check the input fields is not null
         if type(content) is ChangeUsername:
-            DB_Manager.update_user("username", content.ids.n_username.text, 2)
+            DB_Manager.update_user("username", content.ids.n_username.text, self.manager.ids.home.logged_in_user)
         elif type(content) is ChangeEmail:
-            DB_Manager.update_user("email", content.ids.n_email.text, 2)
+            DB_Manager.update_user("email", content.ids.n_email.text, self.manager.ids.home.logged_in_user)
         elif type(content) is ChangePassword:
-            DB_Manager.update_user("password", content.ids.new_password.text, 2)
+            DB_Manager.update_user("password", content.ids.new_password.text, self.manager.ids.home.logged_in_user)
         else:
-            DB_Manager.update_user("delete", content, 2)
+            DB_Manager.update_user("delete", content, self.manager.ids.home.logged_in_user)
         self.submit()

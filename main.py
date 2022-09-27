@@ -46,20 +46,16 @@ class F1Guess(MDApp):
             lambda x: exec("self.root.current = 'manager'", {"self": self}))
         Clock.schedule_once(
             lambda x: exec("self.root.ids.manager.children[0].current = 'login'", {"self": self}))  # , timeout=2)
-        Process(target=self.load_database()).start()
+        # Process(target=self.load_database()).start()
 
     def load_screens(self):
-        # -------- import python screens -------- #
         libpy = os.listdir(self.PYTHON_FILES)
         for modules in libpy:
             exec(f"from lib.libpy import {modules.split('.')[0]}")
-        # -------------------------------- #
 
-        # ---------- load kivy screens ---------- #
         libkv = os.listdir(self.KIVY_FILES)
         for kv in libkv:
             Builder.load_file(f"{self.KIVY_FILES}/{kv}")
-        # --------------------------------------- #
 
     def load_database(self):
         DB_Manager.load_data_from_web()
