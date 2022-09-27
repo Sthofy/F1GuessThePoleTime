@@ -9,26 +9,25 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.list import MDList
 from kivymd.uix.menu import MDDropdownMenu
-
-import dataGetter
+import DB_Manager
+import user_score_helper
 
 
 class TrackList(BoxLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
 
-        tracks = dataGetter.get_tracks()
-        t_keys = list(tracks.keys())
-        t_values = list(tracks.values())
+        data = DB_Manager.get_all_tracks()
+
         self.table = self.ids.table
         md_table = MDDataTable(
             pos_hint={'center_x': 0.5, 'center_y': 0.55},
             size_hint=(0.9, 0.8),
-            rows_num=len(tracks),
+            rows_num=len(data),
             column_data=[
                 ("N°", dp(30)),
                 ("Helyszín", dp(60))],
-            row_data=[(f"{t_keys[i]}", f"{t_values[i]}") for i in range(len(t_keys))],
+            row_data=[(f"{i + 1}", f"{data[i][0]}") for i in range(len(data))],
         )
         self.table.add_widget(md_table)
 
@@ -37,18 +36,17 @@ class Schedule(BoxLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
 
-        schedule_tuple = dataGetter.get_schedule()
-        dates = schedule_tuple[0]
-        places = schedule_tuple[1]
+        schedule = DB_Manager.get_all_tracks()
+
         self.table = self.ids.table
         md_table = MDDataTable(
             pos_hint={'center_x': 0.5, 'center_y': 0.55},
             size_hint=(0.9, 0.8),
-            rows_num=len(dates),
+            rows_num=len(schedule),
             column_data=[
-                ("Dátum", dp(30)),
+                ("Dátum", dp(40)),
                 ("Helyszín", dp(50))],
-            row_data=[(f"{dates[i]}", f"{places[i]}") for i in range(len(dates))],
+            row_data=[(f"{schedule[i][1]}", f"{schedule[i][0]}") for i in range(len(schedule))],
         )
         self.table.add_widget(md_table)
 
@@ -57,25 +55,20 @@ class Standings(BoxLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
 
-        # pos,drivers,teams,points
-        standings_tuple = dataGetter.get_driver_standings()
-        positions = standings_tuple[0]
-        drivers = standings_tuple[1]
-        teams = standings_tuple[2]
-        points = standings_tuple[3]
+        # pos,drivers,points
+        driver_standings = DB_Manager.get_driver_standings()
 
         self.table = self.ids.table
         md_table = MDDataTable(
             pos_hint={'center_x': 0.5, 'center_y': 0.55},
             size_hint=(0.9, 0.8),
-            rows_num=len(positions),
+            rows_num=len(driver_standings),
             column_data=[
-                ("Helyezés", dp(15)),
+                ("Helyezés", dp(25)),
                 ("Név", dp(30)),
-                ("Csapat", dp(30)),
-                ("Pont", dp(15))],
-            row_data=[(f"{positions[i]}", f"{drivers[i]}", f"@{teams[i]}", f"{points[i]}") for i in
-                      range(len(positions))],
+                ("Pont", dp(25))],
+            row_data=[(f"{driver_standings[i][0]}", f"{driver_standings[i][1]}", f"{driver_standings[i][2]}") for i in
+                      range(len(driver_standings))],
         )
         self.table.add_widget(md_table)
 
@@ -83,28 +76,49 @@ class Standings(BoxLayout):
 class Guess(BoxLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        data = dataGetter.get_drivers()
-        drivers = data[1]
+
+        drivers = DB_Manager.get_drivers_long_name()
+        circuits = DB_Manager.get_circuit_names()
+
+        circuits_drop = [
+            {
+                "viewclass": "IconListItem",
+                "text": f"{circuits[i]}",
+                "height": dp(56),
+                "on_release": lambda x=circuits[i]: self.set_circuit(x),
+            } for i in range(len(circuits))]
 
         drivers_drop = [
             {
                 "viewclass": "IconListItem",
                 "text": f"{drivers[i]}",
                 "height": dp(56),
-                "on_release": lambda x=drivers[i]: self.set_item(x),
+                "on_release": lambda x=drivers[i]: self.set_driver(x),
             } for i in range(len(drivers))]
 
-        self.menu = MDDropdownMenu(
-            caller=self.ids.drop_item,
+        self.circuit_menu = MDDropdownMenu(
+            caller=self.ids.drop_circuit,
+            items=circuits_drop,
+            position="center",
+            width_mult=4,
+        )
+
+        self.driver_menu = MDDropdownMenu(
+            caller=self.ids.drop_driver,
             items=drivers_drop,
             position="center",
             width_mult=4,
         )
-        self.menu.bind()
+        self.driver_menu.bind()
+        self.circuit_menu.bind()
 
-    def set_item(self, text_item):
-        self.ids.drop_item.set_item(text_item)
-        self.menu.dismiss()
+    def set_circuit(self, text_item):
+        self.ids.drop_circuit.set_item(text_item)
+        self.circuit_menu.dismiss()
+
+    def set_driver(self, text_item):
+        self.ids.drop_driver.set_item(text_item)
+        self.driver_menu.dismiss()
 
 
 class IconListItem(OneLineIconListItem):
@@ -121,6 +135,8 @@ class DrawerList(ThemableBehavior, MDList):
 
 class Home(Screen):
     dialog = None
+    logged_in_user = -1
+    user_score_helper.logged_in_user_id = logged_in_user
 
     def show_track_list(self):
         if not self.dialog:
@@ -188,9 +204,14 @@ class Home(Screen):
         self.dialog.open()
 
     def save_guess(self, form):
-        driver = form.ids.drop_item.current_item
+        driver = form.ids.drop_driver.current_item
+        circuit = form.ids.drop_circuit.current_item
         time = form.ids.guess_time.text
 
+        guess = (driver, circuit, time, self.logged_in_user)
+        DB_Manager.insert_guess(guess)
+        user_score_helper.calculate_score(guess)
+        self.submit()
 
     def submit(self, *args):
         self.dialog.dismiss(force=True)

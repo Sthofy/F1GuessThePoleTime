@@ -132,9 +132,14 @@
     height: "150dp"
 
     MDDropDownItem:
-        id: drop_item
+        id: drop_circuit
+        text: "Location"
+        on_release: root.circuit_menu.open()
+
+    MDDropDownItem:
+        id: drop_driver
         text: "Who will get the Pole position?"
-        on_release: root.menu.open()
+        on_release: root.driver_menu.open()
 
     MDTextField:
         id:guess_time
