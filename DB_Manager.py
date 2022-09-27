@@ -21,7 +21,7 @@ def perform_select(sql, params):
     curs = conn.cursor()
 
     curs.execute(sql, params)
-    result = [dict(row) for row in curs.fetchall()]
+    result = [row for row in curs.fetchall()]
 
     curs.close()
     conn.close()
@@ -37,7 +37,7 @@ def register_user(username, email, password):
 
 
 def login_user(username):
-    sql = "SELECT password FROM User_Credentials WHERE username=?"
+    sql = "SELECT id,password FROM User_Credentials WHERE username=?"
     params = (username,)
 
     return perform_select(sql, params)
@@ -151,7 +151,7 @@ def insert_drivers(conn, curs, data):
             conn.commit()
 
 
-def insert_qualifications_resilts(conn, curs, data):
+def insert_qualifications_results(conn, curs, data):
     sql = "INSERT INTO Qualification_Results (driver_id, circuit_id, time) VALUES (?, ?, ?)"
     curs.execute("SELECT * FROM Qualification_Results")
     result = curs.fetchall()
@@ -166,7 +166,7 @@ def insert_qualifications_resilts(conn, curs, data):
         driver_ids.append(get_driver_id(curs, d))
 
     for d in circuits:
-        circuit_ids.append(get_circuit_id(curs, d))
+        circuit_ids.append(get_circuit_id(d))
 
     if len(result) < len(times):
         for i in range(len(driver_ids)):
@@ -174,17 +174,18 @@ def insert_qualifications_resilts(conn, curs, data):
             conn.commit()
 
 
-def get_driver_id(curs, driver):
-    curs.execute(f'SELECT driver_number FROM Drivers WHERE driver_name_long="{driver}"')
-    output = [row[0] for row in curs.fetchall()]
-    return output
+def get_driver_id(driver):
+    sql = "SELECT driver_number FROM Drivers WHERE driver_name_long=?"
+    output = perform_select(sql, (driver,))
+
+    return output[0]["driver_number"]
 
 
-def get_circuit_id(curs, circuit):
-    curs.execute(f'SELECT id FROM Tracks WHERE location="{circuit}"')
-    output = [row[0] for row in curs.fetchall()]
+def get_circuit_id(circuit):
+    sql = "SELECT id FROM Tracks WHERE location=?"
+    output = perform_select(sql, (circuit,))
 
-    return output
+    return output[0]["id"]
 
 
 def load_data_from_web():
@@ -196,7 +197,113 @@ def load_data_from_web():
     insert_team_standings(conn, curs, dataGetter.get_teams_standig())
     insert_driver_standings(conn, curs, dataGetter.get_driver_standings())
     insert_drivers(conn, curs, dataGetter.get_drivers())
-    insert_qualifications_resilts(conn, curs, dataGetter.get_qualification_results())
+    insert_qualifications_results(conn, curs, dataGetter.get_qualification_results())
 
     curs.close()
     conn.close()
+
+
+def get_all_tracks():
+    conn = sqlite3.connect("Database/F1Guess.db")
+    curs = conn.cursor()
+
+    curs.execute("SELECT location,date FROM Tracks")
+    out = curs.fetchall()
+
+    curs.close()
+    conn.close()
+    return out
+
+
+def get_driver_standings():
+    conn = sqlite3.connect("Database/F1Guess.db")
+    curs = conn.cursor()
+
+    curs.execute("SELECT pos,driver_name,score FROM Driver_Standings")
+    out = curs.fetchall()
+
+    curs.close()
+    conn.close()
+    return out
+
+
+def get_drivers_long_name():
+    conn = sqlite3.connect("Database/F1Guess.db")
+    curs = conn.cursor()
+    conn.row_factory = sqlite3.Row
+
+    curs.execute("SELECT driver_name_long FROM Drivers")
+    out = [row[0] for row in curs.fetchall()]
+
+    curs.close()
+    conn.close()
+    return out
+
+
+def get_driver_name(param):
+    sql = "SELECT driver_name_long FROM Drivers WHERE driver_number=?"
+    out = perform_select(sql, (param,))
+    return out[0]["driver_name_long"]
+
+
+def get_circuit_names():
+    conn = sqlite3.connect("Database/F1Guess.db")
+    curs = conn.cursor()
+    conn.row_factory = sqlite3.Row
+
+    curs.execute("SELECT location FROM Tracks")
+    out = [row[0] for row in curs.fetchall()]
+
+    curs.close()
+    conn.close()
+    return out
+
+
+def get_driver_id_from_result(param):
+    c_id = get_circuit_id(param)
+    sql = "SELECT driver_id FROM Qualification_Results WHERE circuit_id=?"
+    out = perform_select(sql, (c_id,))
+
+    return out[0]["driver_id"]
+
+
+def insert_guess(data):
+    conn = sqlite3.connect("Database/F1Guess.db")
+    curs = conn.cursor()
+    conn.row_factory = sqlite3.Row
+
+    sql = "INSERT INTO User_Guess (user_id,qualification_id,user_time,driver_name) VALUES (?,?,?,?)"
+    params = (data[3], get_qualification_id(curs, data[1])[0], data[2], data[0])
+
+    curs.execute(sql, params)
+    conn.commit()
+
+    curs.close()
+    conn.close()
+
+
+def get_qualification_id(curs, circuit):
+    curs.execute(f'SELECT id FROM Tracks WHERE location="{circuit}"')
+    output = [row[0] for row in curs.fetchall()]
+
+    return output
+
+
+def get_user_score(u_id):
+    sql = "SELECT score FROM User_Standings WHERE id=?"
+    params = (u_id,)
+
+    result = perform_select(sql, params)
+    return result
+
+
+def get_qualification_time(circuit):
+    circuit_id = get_circuit_id(circuit)
+    sql = "SELECT time FROM Qualification_Results WHERE circuit_id=?"
+    out = perform_select(sql, (circuit_id,))[0]["time"]
+
+    return out
+
+
+def insert_user_score():
+    sql = "INSERT INTO User_Standings (user_id,score) VALUES(?,?)"
