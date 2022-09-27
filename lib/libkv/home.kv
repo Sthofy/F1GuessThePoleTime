@@ -18,9 +18,10 @@
                     padding:'15dp'
                     pos_hint:{'center_x':0.5,'center_y':0.55}
                     StarterCard:
-                        text:"Calendar"
-                        image:'assets/images/calendar.png'
-                        subtext:"Remaining events"
+                        text:"LEADERBOARD"
+                        on_release:
+                            root.show_scoreboard()
+
 
                 MDGridLayout:
                     size_hint_y:.75
@@ -79,18 +80,14 @@
     height: '250dp'
     radius: '20dp'
     ripple_behavior: True
-    image:''
     text:''
-    subtext:''
 
     MDLabel:
         halign:"center"
+        font_style:'H3'
         text:root.text
-    Image:
-        source:root.image
-    MDLabel:
-        halign:"center"
-        text:root.subtext
+
+
 <ElementCard@MDCard>
     md_bg_color:69/255,55/255,86/255,1
     orientation:'vertical'
@@ -122,6 +119,10 @@
 
 
 <Standings>:
+    BoxLayout:
+        id:table
+
+<Scoreboard>:
     BoxLayout:
         id:table
 

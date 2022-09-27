@@ -204,39 +204,35 @@ def load_data_from_web():
 
 
 def get_all_tracks():
-    conn = sqlite3.connect("Database/F1Guess.db")
-    curs = conn.cursor()
+    out = []
+    sql = "SELECT location,date FROM Tracks"
+    data = perform_select(sql, "")
 
-    curs.execute("SELECT location,date FROM Tracks")
-    out = curs.fetchall()
+    for i in range(len(data)):
+        out.append((data[i]["location"], data[i]["date"]))
 
-    curs.close()
-    conn.close()
     return out
 
 
 def get_driver_standings():
-    conn = sqlite3.connect("Database/F1Guess.db")
-    curs = conn.cursor()
+    out = []
+    sql = "SELECT pos,driver_name,score FROM Driver_Standings"
+    data = perform_select(sql, "")
 
-    curs.execute("SELECT pos,driver_name,score FROM Driver_Standings")
-    out = curs.fetchall()
+    for i in range(len(data)):
+        out.append((data[i]["pos"], data[i]["driver_name"], data[i]["score"]))
 
-    curs.close()
-    conn.close()
     return out
 
 
 def get_drivers_long_name():
-    conn = sqlite3.connect("Database/F1Guess.db")
-    curs = conn.cursor()
-    conn.row_factory = sqlite3.Row
+    out = []
+    sql = "SELECT driver_name_long FROM Drivers"
+    data = perform_select(sql, "")
 
-    curs.execute("SELECT driver_name_long FROM Drivers")
-    out = [row[0] for row in curs.fetchall()]
+    for i in range(len(data)):
+        out.append(data[i]["driver_name_long"])
 
-    curs.close()
-    conn.close()
     return out
 
 
@@ -247,15 +243,13 @@ def get_driver_name(param):
 
 
 def get_circuit_names():
-    conn = sqlite3.connect("Database/F1Guess.db")
-    curs = conn.cursor()
-    conn.row_factory = sqlite3.Row
+    out = []
+    sql = "SELECT location FROM Tracks"
+    data = perform_select(sql, "")
 
-    curs.execute("SELECT location FROM Tracks")
-    out = [row[0] for row in curs.fetchall()]
+    for i in range(len(data)):
+        out.append(data[i]["location"])
 
-    curs.close()
-    conn.close()
     return out
 
 
@@ -268,33 +262,27 @@ def get_driver_id_from_result(param):
 
 
 def insert_guess(data):
-    conn = sqlite3.connect("Database/F1Guess.db")
-    curs = conn.cursor()
-    conn.row_factory = sqlite3.Row
-
     sql = "INSERT INTO User_Guess (user_id,qualification_id,user_time,driver_name) VALUES (?,?,?,?)"
-    params = (data[3], get_qualification_id(curs, data[1])[0], data[2], data[0])
+    params = (data[3], get_qualification_id(data[1]), data[2], data[0])
 
-    curs.execute(sql, params)
-    conn.commit()
-
-    curs.close()
-    conn.close()
+    perform_insert(sql, params)
 
 
-def get_qualification_id(curs, circuit):
-    curs.execute(f'SELECT id FROM Tracks WHERE location="{circuit}"')
-    output = [row[0] for row in curs.fetchall()]
+def get_qualification_id(circuit):
+    sql = "SELECT id FROM Tracks WHERE location=?"
+    data = perform_select(sql, (circuit,))
+
+    output = data[0]["id"]
 
     return output
 
 
 def get_user_score(u_id):
-    sql = "SELECT score FROM User_Standings WHERE id=?"
+    sql = "SELECT score FROM User_Standings WHERE user_id=?"
     params = (u_id,)
 
     result = perform_select(sql, params)
-    return result
+    return result[0]["score"]
 
 
 def get_qualification_time(circuit):
@@ -305,5 +293,39 @@ def get_qualification_time(circuit):
     return out
 
 
-def insert_user_score():
-    sql = "INSERT INTO User_Standings (user_id,score) VALUES(?,?)"
+def update_user_score(param):
+    sql = "UPDATE User_Standings SET score=? WHERE user_id=?"
+    perform_insert(sql, (param[1], param[0]))
+
+
+def get_user_from_score(u_id):
+    sql = "SELECT user_id FROM User_Standings WHERE id=?"
+    params = (u_id,)
+
+    result = perform_select(sql, params)
+    return result
+
+
+def insert_first_score(u_id):
+    if not get_user_score(u_id):
+        sql = "INSERT INTO User_Standings (user_id) VALUES (?)"
+        perform_insert(sql, (u_id,))
+
+
+def get_username(param):
+    sql = "SELECT username FROM User_Credentials WHERE id=?"
+    data = perform_select(sql, (param,))
+    out = data[0]["username"]
+
+    return out
+
+
+def get_user_standings():
+    out = []
+    sql = "SELECT * FROM User_Standings"
+    data = perform_select(sql, "")
+
+    for i in range(len(data)):
+        out.append((data[i]["id"], get_username(data[i]["user_id"]), data[i]["score"]))
+
+    return out

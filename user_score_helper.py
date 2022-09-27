@@ -3,7 +3,7 @@ from datetime import timedelta
 import DB_Manager
 
 CORRECT_DRIVER = 500
-logged_in_user_id = -1
+MAX_SCORE = 1000
 
 
 def load_previous_score(u_id):
@@ -25,33 +25,38 @@ def load_correct_driver(circuit):
     return c_driver
 
 
-guess_data = ["Max Verstappen", "Szahír", " 1:30.558", 1]
-
-
-def timeConvert(param):
+def time_convert(param):
     d = timedelta(minutes=int(param[0:2]), seconds=int(param[3:5]), microseconds=int(param[6:9] + "000"))
     return d
 
 
 def calculate_score(guess_data):
     # guess = (driver, circuit, time, self.logged_in_user)
-    p_score = load_previous_score(guess_data[3])
+    score = load_previous_score(guess_data[3])
     correct_time = load_correct_time(guess_data[1])
     correct_driver = load_correct_driver(guess_data[1])
     user_time = guess_data[2]
     user_driver = guess_data[0]
 
-    c_time = timeConvert(correct_time)
-    print(c_time)
-    u_time = timeConvert(user_time)
-    if c_time < u_time:
+    c_time = time_convert(correct_time)
+    u_time = time_convert(user_time)
+    if c_time < u_time:  # + ág
         diff = u_time - c_time
-        print(diff.microseconds)
-    elif c_time > u_time:
+        if diff.seconds > 0:
+            score += 0
+        else:
+            score += (1000 - int(str(diff.microseconds)[0:3]))
+
+    elif c_time > u_time:  # - ág
         diff = c_time - u_time
-        print(diff.microseconds)
+        if diff.seconds > 0:
+            score += 0
+        else:
+            score += (1000 - int(str(diff.microseconds)[0:3]))
     else:
-        print("Zero")
+        score += MAX_SCORE
 
+    if correct_driver == user_driver:
+        score += CORRECT_DRIVER
 
-calculate_score(guess_data)
+    return score

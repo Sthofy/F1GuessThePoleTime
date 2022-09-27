@@ -121,6 +121,26 @@ class Guess(BoxLayout):
         self.driver_menu.dismiss()
 
 
+class Scoreboard(BoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
+
+        data = DB_Manager.get_user_standings()
+
+        self.table = self.ids.table
+        md_table = MDDataTable(
+            pos_hint={'center_x': 0.5, 'center_y': 0.55},
+            size_hint=(0.9, 0.8),
+            rows_num=len(data),
+            column_data=[
+                ("N°", dp(10)),
+                ("Username", dp(35)),
+                ("Score", dp(35))],
+            row_data=[(f"{data[i][0]}", f"{data[i][1]}", f"{data[i][2]}") for i in range(len(data))],
+        )
+        self.table.add_widget(md_table)
+
+
 class IconListItem(OneLineIconListItem):
     pass
 
@@ -136,7 +156,6 @@ class DrawerList(ThemableBehavior, MDList):
 class Home(Screen):
     dialog = None
     logged_in_user = -1
-    user_score_helper.logged_in_user_id = logged_in_user
 
     def show_track_list(self):
         if not self.dialog:
@@ -203,15 +222,36 @@ class Home(Screen):
             )
         self.dialog.open()
 
+    def show_scoreboard(self):
+        if not self.dialog:
+            content_cls = BoxLayout(orientation='vertical', padding=20, spacing=10)
+            scoreboard = Scoreboard()
+            btn = MDRaisedButton(text="Close", pos_hint={"center_x": .5})
+            content_cls.add_widget(scoreboard)
+            content_cls.add_widget(btn)
+            self.dialog = Popup(
+                title="LEADERBOARD",
+                size_hint=(.9, .9),
+                content=content_cls,
+            )
+            btn.bind(on_release=self.submit)
+        self.dialog.open()
+
     def save_guess(self, form):
         driver = form.ids.drop_driver.current_item
         circuit = form.ids.drop_circuit.current_item
-        time = form.ids.guess_time.text
+        time = " " + form.ids.guess_time.text
 
         guess = (driver, circuit, time, self.logged_in_user)
-        DB_Manager.insert_guess(guess)
-        user_score_helper.calculate_score(guess)
+        # DB_Manager.insert_guess(guess)
+
+        self.save_score(guess)
+
         self.submit()
+
+    def save_score(self, data):
+        score = user_score_helper.calculate_score(data)
+        DB_Manager.update_user_score((self.logged_in_user, score))
 
     def submit(self, *args):
         self.dialog.dismiss(force=True)

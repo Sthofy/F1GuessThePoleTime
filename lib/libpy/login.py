@@ -23,6 +23,7 @@ class Login(Screen):
             if bcrypt.checkpw(bytes(curr_password, encoding='utf-8'), pw_hash):
                 self.manager.current = 'home'
                 self.manager.ids.home.logged_in_user = (req[0]["id"])
+                DB_Manager.insert_first_score(req[0]["id"])
 
         except Exception as e:
             print(e)
