@@ -22,6 +22,7 @@ Window.softinput_mode = 'below_target'
 
 
 class F1Guess(MDApp):
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.theme_cls.primary_palette = "Red"
@@ -57,6 +58,7 @@ class F1Guess(MDApp):
         for kv in libkv:
             Builder.load_file(f"{self.KIVY_FILES}/{kv}")
 
+    @staticmethod
     def load_database(self):
         DB_Manager.load_data_from_web()
 

@@ -163,7 +163,7 @@ def insert_qualifications_results(conn, curs, data):
     circuit_ids = []
 
     for d in driver_names:
-        driver_ids.append(get_driver_id(curs, d))
+        driver_ids.append(get_driver_id(d))
 
     for d in circuits:
         circuit_ids.append(get_circuit_id(d))

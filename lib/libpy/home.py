@@ -14,7 +14,7 @@ import user_score_helper
 
 
 class TrackList(BoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         data = DB_Manager.get_all_tracks()
@@ -33,7 +33,7 @@ class TrackList(BoxLayout):
 
 
 class Schedule(BoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         schedule = DB_Manager.get_all_tracks()
@@ -52,7 +52,7 @@ class Schedule(BoxLayout):
 
 
 class Standings(BoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         # pos,drivers,points
@@ -74,7 +74,7 @@ class Standings(BoxLayout):
 
 
 class Guess(BoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         drivers = DB_Manager.get_drivers_long_name()
@@ -122,7 +122,7 @@ class Guess(BoxLayout):
 
 
 class Scoreboard(BoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         data = DB_Manager.get_user_standings()
@@ -243,7 +243,7 @@ class Home(Screen):
         time = " " + form.ids.guess_time.text
 
         guess = (driver, circuit, time, self.logged_in_user)
-        # DB_Manager.insert_guess(guess)
+        DB_Manager.insert_guess(guess)
 
         self.save_score(guess)
 
